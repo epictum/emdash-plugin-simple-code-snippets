@@ -1,0 +1,8 @@
+node_modules
+dist
+*.log
+*.tgz
+pnpm-lock.yaml
+package-lock.json
+bun.lock
+bun.lockb
