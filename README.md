@@ -71,6 +71,11 @@ If you want to change the plugin's code, copy this repo into your site as a work
      "workspaces": ["plugins/*"]
      ```
    If your site deploys with Bun (Cloudflare Workers Builds without a lockfile) but you develop with pnpm, add both.
+   **Bun 1.3 and later** install workspace packages in isolation, which gives the plugin its own copy of `@cloudflare/kumo` instead of sharing the admin's. Cloudflare Workers Builds uses Bun when there's no lockfile. Add a `bunfig.toml` at your site's root so everything shares one copy:
+     ```toml
+     [install]
+     linker = "hoisted"
+     ```
 3. Add the dependency as `"emdash-plugin-simple-code-snippets": "workspace:*"` and run your install.
 
 </details>
@@ -177,7 +182,7 @@ The settings page has its own Delete button because the admin's uninstall dialog
 - **Per-request cost.** Each public page render does one small key-value read for the snippet.
 - **Bundle size.** Terser adds about 1.2 MB (unminified) to the Worker bundle. It is loaded only when you save, to check script syntax and to minify if that's on, so page renders never load it.
 - **One snippet.** There is one snippet with one placement. For code in both the head and the footer, put it all in one placement, or extend `SnippetConfig` to hold more than one.
-- **Kumo version.** `@cloudflare/kumo` is a peer dependency pinned to the version EmDash's admin uses (2.6.0 in EmDash 1.3). The plugin has to share the admin's copy of Kumo for its toast notifications to appear. If a future EmDash moves to a newer Kumo, this pin needs to move with it.
+- **Kumo version.** `@cloudflare/kumo` is a peer dependency pinned to the version EmDash's admin uses (2.6.0 in EmDash 1.3). The plugin has to share the admin's copy of Kumo to use the admin's toast notifications. Kumo also bundles its own Base UI, so two Kumo copies mean two separate toast systems. If the plugin can't reach the admin's toasts, for example because of a version mismatch or a second Kumo copy, it shows its messages on the page instead of crashing. If a future EmDash moves to a newer Kumo, update this pin to match.
 
 ## Why native
 

@@ -2,6 +2,10 @@
 
 All notable changes to this plugin. Versions follow [semver](https://semver.org/).
 
+## 1.4.2
+
+Fixes the settings page crashing the whole admin with "Base UI error #73" ("useToastManager must be used within <Toast.Provider>"). This happened when the site ended up with a second copy of `@cloudflare/kumo`, so the plugin couldn't reach the admin's toast provider. Bun 1.3+ does this for workspace packages, and Cloudflare Workers Builds moved to Bun 1.4. The page now detects a missing toast provider and shows its status messages on the page instead. Added tests for both cases.
+
 ## 1.4.1
 
 Save validation reports every problem at once instead of stopping at the first. It catches misspelled tags (`</scrrript>`, `<scirpt>`) and recovers after each problem. It reports root causes rather than knock-on errors, and runs the JavaScript syntax check alongside tag checks. The toast gives the single error, or the error count with a pointer to the list in the Code Snippet section.
